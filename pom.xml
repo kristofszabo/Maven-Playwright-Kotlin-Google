@@ -9,9 +9,11 @@
 
     <properties>
         <kotlin.version>1.7.10</kotlin.version>
+        <baseUrl>_</baseUrl>
     </properties>
 
     <dependencies>
+        <!-- For using kotlin -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
@@ -29,17 +31,21 @@
             <artifactId>playwright</artifactId>
             <version>1.39.0</version>
         </dependency>
+
+        <!-- Using testng -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
+            <!--This needed for testing from the main kt when run like this:
+                mvn compile exec:java -P ENV_TEST -D"exec.mainClass"="com.chorisoft.google.MainKt"
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -53,17 +59,21 @@
                     </archive>
                 </configuration>
             </plugin>
+            <!--This needed for testing from the main kt -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
-                    <compilerArgs>
-                        <arg>-DbaseUrl=${baseUrl}</arg>
-                    </compilerArgs>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>baseUrl</key>
+                            <value>${baseUrl}</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
-
+            <!-- compilation for kotlin -->
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -89,13 +99,32 @@
     </build>
 
     <profiles>
+        <!-- For selecting environment(s) -->
         <profile>
             <id>ENV_TEST</id>
             <properties>
                 <baseUrl>https://google.hu</baseUrl>
             </properties>
         </profile>
+
+        <!-- For selecting browser-->
+        <profile>
+            <id>BROWSER_CHROME</id>
+            <properties>
+                <browser>Chrome</browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>BROWSER_FIREFOX</id>
+            <properties>
+                <browser>Firefox</browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>BROWSER_WEBKIT</id>
+            <properties>
+                <browser>Webkit</browser>
+            </properties>
+        </profile>
     </profiles>
-
-
 </project>
