@@ -70,6 +70,10 @@
                             <key>baseUrl</key>
                             <value>${baseUrl}</value>
                         </systemProperty>
+                        <systemProperty>
+                            <key>browser</key>
+                            <value>${browser}</value>
+                        </systemProperty>
                     </systemProperties>
                 </configuration>
             </plugin>
